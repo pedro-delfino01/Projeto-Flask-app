@@ -4,8 +4,6 @@ from database.sessao import db
 from routes.list_file import Pagamentos, register_routes
 from settings.config import Config
 
-app = Flask(__name__)
-
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
