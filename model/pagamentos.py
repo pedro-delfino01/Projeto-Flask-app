@@ -3,7 +3,7 @@ from database.sessao import db
 
 class Pagamentos(db.Model):
     __tablename__ = 'pagamentos'
-    processo = db.Column(db.Integer(), primary_key=True, nullable=False)
+    processo = db.Column(db.String(), primary_key=True, nullable=False)
     orgao = db.Column(db.String(), nullable=False)
     unidade = db.Column(db.String(), nullable=False)
     data = db.Column(db.String(10), nullable=False)

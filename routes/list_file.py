@@ -62,3 +62,67 @@ def register_routes(app):
             resultados.append(result)
 
         return jsonify(resultados), 200
+
+    @app.route('/pagamentos/filtro', methods=['GET'])
+    def listar_pagamentos_com_filtros():
+        processo = request.args.get('processo')
+        orgao = request.args.get('orgao')
+        query = Pagamentos.query
+
+        if processo:
+            query = query.filter_by(processo=processo)
+        if orgao:
+            query = query.filter_by(orgao=orgao)
+
+        resultados = []
+        pagamentos_filtrados = query.all()
+        for pagamento in pagamentos_filtrados:
+            result = {
+                'orgao': pagamento.orgao,
+                'unidade': pagamento.unidade,
+                'data': pagamento.data,
+                'empenho': pagamento.empenho,
+                'processo': pagamento.processo,
+                'credor': pagamento.credor,
+                'pago': pagamento.pago,
+                'retido': pagamento.retido,
+                'anulacao': pagamento.anulacao,
+                'nota': pagamento.nota,
+                'cnpj': pagamento.cnpj,
+                'ds_empenho': pagamento.ds_empenho,
+                'ds_item_despesa': pagamento.ds_item_despesa
+            }
+            resultados.append(result)
+        return jsonify(resultados), 200
+
+    @app.route('/transacao/<int:processo>/editar', methods=['PUT'])
+    def atualizar_pagamento(processo):
+        data = request.get_json()
+        pagamento = Pagamentos.query.get_or_404(processo)
+
+        pagamento.orgao = data.get('orgao', pagamento.orgao)
+        pagamento.unidade = data.get('unidade', pagamento.unidade)
+        pagamento.data = data.get('data', pagamento.data)
+        pagamento.empenho = data.get('empenho', pagamento.empenho)
+        pagamento.processo = data.get('processo', pagamento.processo)
+        pagamento.credor = data.get('credor', pagamento.credor)
+        pagamento.pago = data.get('pago', pagamento.pago)
+        pagamento.retido = data.get('retido', pagamento.retido)
+        pagamento.anulacao = data.get('anulacao', pagamento.anulacao)
+        pagamento.nota = data.get('nota', pagamento.nota)
+        pagamento.cnpj = data.get('cnpj', pagamento.cnpj)
+        pagamento.ds_empenho = data.get('ds_empenho', pagamento.ds_empenho)
+        pagamento.ds_item_despesa = data.get('ds_item_despesa', pagamento.ds_item_despesa)
+
+        db.session.commit()
+
+        return jsonify({'message': 'Pagamento atualizado com sucesso!'}), 200
+
+    @app.route('/pagamentos/<processo>/remover/', methods=['DELETE'])
+    def deletar_transacao(processo):
+        pagamento = Pagamentos.query.get_or_404(processo)
+
+        db.session.delete(pagamento)
+        db.session.commit()
+
+        return jsonify({'message': 'Pagamento deletado com sucesso!'}), 200
