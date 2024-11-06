@@ -6,7 +6,7 @@ class Pagamentos(db.Model):
     processo = db.Column(db.String(), primary_key=True, nullable=False)
     orgao = db.Column(db.String(), nullable=False)
     unidade = db.Column(db.String(), nullable=False)
-    data = db.Column(db.String(10), nullable=False)
+    data = db.Column(db.String(), nullable=False)
     empenho = db.Column(db.String(10), nullable=False)
     credor =db.Column(db.String(), nullable=False)
     pago = db.Column(db.String(), nullable=False)
@@ -16,3 +16,4 @@ class Pagamentos(db.Model):
     cnpj = db.Column(db.String(), nullable=False)
     ds_empenho = db.Column(db.String(), nullable=False)
     ds_item_despesa = db.Column(db.String(), nullable=False)
+    is_deleted = db.Column(db.Boolean, default=False)
