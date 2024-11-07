@@ -68,6 +68,8 @@ def register_routes(app):
     @app.route('/pagamentos/filtro', methods=['GET'])
     def listar_pagamentos_com_filtros():
         processo = request.args.get('processo')
+        orgao = request.args.get('orgao')
+        credor = request.args.get('credor')
         cnpj = request.args.get('cnpj')
         mes = request.args.get('mes')
         query = Pagamentos.query
@@ -75,15 +77,18 @@ def register_routes(app):
         if processo:
             query = query.filter_by(processo=processo)
 
+        if orgao:
+            query = query.filter(Pagamentos.orgao.like(f'%{orgao}%'))
+
+        if credor:
+            query = query.filter(Pagamentos.credor.like(f'%{credor}%'))
+
         if cnpj:
             query = query.filter_by(cnpj=cnpj)
 
         if mes:
-            try:
-                mes = int(mes)
-                query = query.filter(int(func.regexp_match(Pagamentos.data, r'\d{2}(?=/\d{4}$)')) == mes)
-            except ValueError:
-                return jsonify({'error': 'Mês inválido, deve ser um número entre 1 e 12'}), 400
+            mes=int(mes)
+            query = query.filter(func.substr(Pagamentos.data, 4, 2) == f"{mes:02d}")
 
 
         resultados = []
