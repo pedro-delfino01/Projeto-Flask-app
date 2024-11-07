@@ -136,7 +136,7 @@ def register_routes(app):
         return jsonify({'message': 'Pagamento atualizado com sucesso!'}), 200
 
     @app.route('/pagamentos/<processo>/remover/', methods=['DELETE'])
-    def deletar_transacao(processo):
+    def deletar_pagamento(processo):
         pagamento = Pagamentos.query.get_or_404(processo)
 
         pagamento.is_deleted = True
